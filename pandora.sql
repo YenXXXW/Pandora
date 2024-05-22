@@ -26,3 +26,8 @@ CREATE TABLE POST (
 select * from users;
 
 insert into users values (null, 'yan', 'yab@gmail.com', 'yan12'); 
+
+
+select * from posts;
+INSERT INTO posts (title, content, user_id)
+VALUES ('My First Post', 'This is my first post on the website.', 1);
