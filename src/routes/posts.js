@@ -9,6 +9,10 @@ router.get("/:postId", postControllers.getPost)
 
 router.post("/post", postControllers.createPost)
 
+router.put("/:postId", postControllers.updatePost)
+
+router.delete("/:postId", postControllers.deletePost)
+
 
 
 export default router

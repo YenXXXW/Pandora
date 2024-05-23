@@ -30,7 +30,6 @@ async function authenticateRefreshToken(req, res, next) {
 
     try {
         
-
         if (!refreshToken){
             throw Error("INVALID CREDENTIALS")
         }
