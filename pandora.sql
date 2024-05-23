@@ -23,6 +23,13 @@ CREATE TABLE POST (
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE REFRESH_TOKENS (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	token text NOT NULL
+);
+
+
+
 select * from users;
 
 insert into users values (null, 'yan', 'yab@gmail.com', 'yan12'); 
