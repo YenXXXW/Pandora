@@ -13,6 +13,7 @@ export default function Posts() {
 
   const navigate = useNavigate()
 
+
   const handleClick = (id) => {
     navigate(`/posts/${id}`)
   }

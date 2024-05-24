@@ -3,6 +3,7 @@ import { useGetPostbyIdQuery, useUpdatePostMutation } from "../features/postsApi
 import { useParams } from "react-router-dom";
 
 
+
 export default function Post() {
     const { id } = useParams();
 
@@ -12,6 +13,8 @@ export default function Post() {
     const [title ,setTitle] = useState("")
     const [content, seContent]= useState("")
     const [success, setSuccess] = useState(false)
+
+
 
     useEffect(() => {
         if(data) {
@@ -33,6 +36,7 @@ export default function Post() {
             if (res.message === "post updated successfully") {
                 setSuccess(true)
             }
+
 
         } catch (error) {
             console.log(error)
@@ -71,7 +75,10 @@ export default function Post() {
         
         )
       }
-      { success && <p className="bg-green-500 py-1">post updated successfully</p>}
+      { success && <div>
+        <p className="bg-green-500 py-1">post updated successfully</p>
+        <a href="/posts"><p className="bg-green-500 py-1 mt-2">Back</p></a>
+        </div>}
       </div>
      
       
