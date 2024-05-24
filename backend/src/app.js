@@ -6,7 +6,8 @@ import morgan from 'morgan'
 import protect from './middleware/authenticate.js'
 import cookieParser from 'cookie-parser'
 import cors from "cors";
-import session from 'express-session'
+import createHttpError, {isHttpError} from 'http-errors'
+
 
 dotenv.config()
 
@@ -41,16 +42,19 @@ app.use("/api/auth", authRoutes)
 
 
 app.use((req, res, next) => {
-    next(Error("endpoint not found"))
+    next(createHttpError(404, "Endpoint not found"))
 })
 
 // next() needed that next recognizes the following as error handler
 app.use((error, req, res, next) => {
-    console.log(error)
     let errorMessage = 'An unknowned error occured'
-    if (error instanceof  Error) errorMessage  = error.message
+    let statusCode = 500
+    if (isHttpError(error)){
+        statusCode = error.status
+        errorMessage = error.message
+    }
         
-    res.status(500).json({error : errorMessage})
+    res.status(statusCode).json({error : errorMessage})
     
 })
 

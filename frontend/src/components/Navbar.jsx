@@ -32,12 +32,7 @@ export default function Navbar() {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                />
-              </div>
+              ...
             </div>
             <ul
               tabIndex={0}
@@ -47,20 +42,15 @@ export default function Navbar() {
                 userInfo 
                 ?
                   <>
-                    <li>
-                      <a className="justify-between">
-                        Profile
-                        <span className="badge">New</span>
-                      </a>
-                    </li>
-                    <li onClick ={logoutHandler} >
+
+                    <li  className="cursor-pointer" onClick ={logoutHandler} >
                       Logout
                     </li>
                   </> 
                 :
                   <>
-                    <a href="/login"><li className="authButton">LogIn</li></a>
-                    <a href="/register"><li>Register</li></a>
+                    <a href="/login"><li className="authButton mb-3">LogIn</li></a>
+                    <a href="/register"><li className="authButton">Register</li></a>
                   </>
               }
             </ul>

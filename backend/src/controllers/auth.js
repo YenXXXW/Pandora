@@ -2,6 +2,7 @@ import pool from "../../database.js"
 import dotenv from 'dotenv'
 import generateToken from "../utils/generateToken.js"
 import bcrypt from "bcrypt"
+import createHttpError from "http-errors"
 
 dotenv.config()
 
@@ -13,23 +14,27 @@ export const signup = async (req, res, next) => {
 
     try{
         if(!email || !username || !password) {
-            throw Error("All fields must be filled")
+            throw createHttpError(400, "All fields must be filled")
         }
 
         const [oldUser] = await pool.query(`SELECT * FROM USERS WHERE email = ?`, [email])
         if (oldUser.length > 0) {
-            throw Error("User already exists")
+            throw createHttpError(409, "user aleady exits")
         }
 
         const hashPassword = await bcrypt.hash(password, 10)
         
         const [result] = await pool.query(`INSERT INTO USERS (username, email, password) VALUES ( ?, ?, ?)`, [username, email, hashPassword])
         const [user] =  await pool.query(`SELECT * FROM USERS WHERE id = ?`, result.insertId)
-        generateToken(res, user._id);
+        generateToken(res, user);
 
         const usercreated =  user[0]
+        console.log(usercreated)
         req.user = usercreated
-       res.json({usercreated})
+        res.json({
+            username : usercreated.username,
+            email: usercreated.email
+        })
 
     } catch (error) {
         next(error)
@@ -41,22 +46,27 @@ export const login = async(req, res, next) => {
     const password = req.body.password 
 
     try{
-        if(!email ||  !password) throw Error("fields must be filled")
+        if(!email ||  !password){
+            throw createHttpError(400, "All fields must be filled")
+        } 
         const [emailIndb] = await  pool.query(`SELECT * from users where email =?`, [email])
         const user = emailIndb[0]
         if (!user) {
-            throw Error("Unauthorized")
+            throw createHttpError(401, "Unauthorized")
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password)
         
         if(!passwordMatch) {
-            throw Error("Unauthorized")
+            throw createHttpError(401, "Unauthorized")
         }
         
         generateToken(res, user)
         req.user = user
-        res.json(user)
+        res.json({
+            username : user.username,
+            email: user.email
+        })
     } catch(error) {
         next(error)
     }

@@ -1,5 +1,7 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { useCreatePostMutation } from '../features/postsApiSlice'
+import { useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
 
 export default function CreatePost() {
@@ -9,6 +11,14 @@ export default function CreatePost() {
 
     const [createPost , {isLoading}] = useCreatePostMutation()
 
+    const { userInfo } = useSelector((state) => state.auth);
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!userInfo) {
+          navigate("/login")
+        } 
+      }, [])
 
     const handleSubmit = async(e) => {
         e.preventDefault()

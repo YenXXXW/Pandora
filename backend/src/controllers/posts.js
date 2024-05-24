@@ -16,7 +16,9 @@ export const getPost = async(req, res, next) => {
 
     const id = req.params.postId
     try {
-        if(!id) throw Error("Please fill the requied paraemeters")
+        if(!id){
+            throw createHttpError(400, "All fields must be filled")
+        }
 
         const [post] = await pool.query(`SELECT * FROM posts WHERE id = ?`, [id]) 
         res.json(post)
@@ -33,7 +35,9 @@ export const createPost = async (req, res, next) => {
     const content  = req.body.content
     const user_id = req.user.id
     try{
-        if(!title || !content || !user_id) throw Error("Please fill the requied paraemeters")
+        if(!title || !content || !user_id){
+            throw createHttpError(400, "All fields must be filled")
+        }
 
         const [result] = await pool.query(`INSERT INTO POSTS (title, content, user_id) VALUES ( ?, ?, ?)`, [title, content, user_id])
         const id = result.insertId
@@ -52,7 +56,7 @@ export const updatePost = async (req, res, next) => {
 
     try{
         if(!title || !content || !user_id || !postId){
-            throw Error("Please fill the requied paraemeters")
+            throw createHttpError(400, "All fields must be filled")
         }
 
         const [result] = await pool.query(`UPDATE POSTS SET title = ?, content = ?, user_id = ? WHERE id = ?`, [title, content, user_id, postId]);
@@ -67,7 +71,9 @@ export const deletePost = async (req, res, next) => {
     const postId = req.params.postId
 
     try{
-        if(!postId) throw Error("Please fill the requied paraemeters")
+        if(!postId){
+            throw createHttpError(400, "All fields must be filled")
+        }
 
         const [result] = await pool.query(`DELETE FROM POSTS WHERE id = ?`, [postId]);
         const id = result.insertId

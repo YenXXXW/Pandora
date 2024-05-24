@@ -1,17 +1,27 @@
 import { useDeletePostMutation, useGetPostsQuery } from "../features/postsApiSlice"
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
 export default function Posts() {
 
   const { userInfo } = useSelector((state) => state.auth);
-  
+
   const { data, error, isLoading } = useGetPostsQuery()
 
   const [deletePost , {deleteLoaing}]= useDeletePostMutation()
 
   const navigate = useNavigate()
+
+
+
+  useEffect(() => {
+      if(!userInfo) {
+        navigate("/login")
+      } 
+    }, [])
+
 
 
   const handleClick = (id) => {
@@ -32,11 +42,14 @@ export default function Posts() {
     )
   }
 
+
   if(error) {
     return (
-      <p>Something went wrong!!</p>
+      <p className="mt-[20vh]"> Something Went Wrong !!!</p>
     )
   }
+
+  
   return (
     <div>
   

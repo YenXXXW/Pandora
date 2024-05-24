@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useGetPostbyIdQuery, useUpdatePostMutation } from "../features/postsApiSlice"
 import { useParams } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Post() {
@@ -14,11 +15,19 @@ export default function Post() {
     const [content, seContent]= useState("")
     const [success, setSuccess] = useState(false)
 
+    const { userInfo } = useSelector((state) => state.auth);
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!userInfo) {
+          navigate("/login")
+        } 
+      }, [])
+
 
 
     useEffect(() => {
         if(data) {
-        
             setTitle(data[0].title)
             seContent(data[0].content)
         }

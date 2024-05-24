@@ -1,19 +1,18 @@
 import { useState } from "react";
-import { useRegisterMutation } from "../features/UserApiSlice";
-import { setCredentials } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
+import { useLoginMutation } from "../features/UserApiSlice";
+import { setCredentials } from "../features/authSlice";
 
-export default function Register() {
+export default function Login() {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [userEixsts, setUserExists] = useState(false)
-  
 
   const dispatch = useDispatch();
 
-  const [register, { isLoading }] = useRegisterMutation();
+  const [login, { isLoading }] = useLoginMutation();
+
+  const [invaldCredentials, setInvaldCredential] = useState(false)
 
 
   const navigate = useNavigate()
@@ -21,19 +20,20 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await register({ username, email, password }).unwrap();
+      const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate("/posts")
     } catch (error) {
-      if(error.message === "User already exists") {
-        setUserExists(true)
+      console.log(error.status)
+      if(error.status === 401) {
+        setInvaldCredential(true)
+        console.log(invaldCredentials)
       }
     }
   };
 
-
   return (
-    <div className="flex justify-center items-center h-[80vh]">
+    <div className="flex flex-col gap-5 justify-center items-center h-[80vh]">
       <form
         className="w-[300px] sm:w-[400px] flex flex-col gap-5"
         onSubmit={(e) => handleSubmit(e)}
@@ -49,31 +49,15 @@ export default function Register() {
             <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
           </svg>
           <input
-            type="text"
+            type="email"
             className="grow"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="w-4 h-4 opacity-70"
-          >
-            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-          </svg>
-          <input
-            type="text"
-            className="grow"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </label>
+
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -95,13 +79,17 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button className="authButton flex items-center justify-center gap-2">REGISTER {isLoading ? <span className="loading loading-spinner loading-sm"></span>: <></>}</button>
-        {
-        userEixsts && (
-          <p className="bg-red-400 py-3 text-white rounded-md">Acoount with this email exits</p>
-        )
-      }
+        <button className="authButton flex items-center justify-center gap-2">LOG IN {isLoading ? <span className="loading loading-spinner loading-sm"></span>: <></>}</button>
+        
       </form>
+      <div className="w-[300px] sm:w-[400px]">
+        <a href="/register" className="authButton w-full"><button className="w-full">Register</button></a>
+        {
+        invaldCredentials && (
+          <p className="bg-red-400 py-3 text-white rounded-md mt-3 ">Invalid Username or Password</p>
+          )
+        }
+      </div>
       
     </div>
   );

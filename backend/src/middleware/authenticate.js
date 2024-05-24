@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import pool from "../../database.js"
+import createHttpError from 'http-errors';
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
@@ -16,6 +17,8 @@ const protect = asyncHandler(async (req, res, next) => {
         email: decoded.userId.email,
         username: decoded.userId.username
       }
+
+  
       req.user = user
 
       next()
@@ -23,8 +26,7 @@ const protect = asyncHandler(async (req, res, next) => {
       next(error)
     }
   } else {
-    res.status(401);
-    throw new Error('Not authorized, no token');
+    throw createHttpError(401, "Unauthorized");
   }
 });
 
