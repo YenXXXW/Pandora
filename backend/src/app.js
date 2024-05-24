@@ -3,13 +3,16 @@ import dotenv from 'dotenv'
 import postRoutes from "./routes/posts.js"
 import authRoutes from "./routes/auth.js"
 import morgan from 'morgan'
-import  { authenticateTokens } from "./utils/Authenticate.js"
+import protect from './middleware/authenticate.js'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
 const app = express()
 
 app.use(express.json())
+
+app.use(cookieParser())
 
 app.use(morgan("dev"))
 
@@ -21,7 +24,7 @@ app.get("/", (req, res, next) => {
     res.send("hello")
 })
 
-app.use("/api/posts",authenticateTokens,  postRoutes)
+app.use("/api/posts" , protect, postRoutes)
 
 app.use("/api/auth", authRoutes)
 
@@ -32,7 +35,7 @@ app.use((req, res, next) => {
 
 // next() needed that next recognizes the following as error handler
 app.use((error, req, res, next) => {
-    console.log(error)
+    console.log("fck")
     let errorMessage = 'An unknowned error occured'
     if (error instanceof  Error) errorMessage  = error.message
         

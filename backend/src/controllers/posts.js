@@ -1,9 +1,9 @@
 import pool from "../../database.js"
 
 export const getPosts = async(req, res, next) => {
-    const userId = req.user.id
+
     try {
-        const [posts] = await pool.query("SELECT * FROM POSTS WHERE user_id = ?", [userId])
+        const [posts] = await pool.query("SELECT * FROM POSTS ")
         res.json(posts)
     }
     catch (error) {

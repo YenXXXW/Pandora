@@ -1,6 +1,6 @@
 import pool from "../../database.js"
 import dotenv from 'dotenv'
-import { genrateTokens } from "../utils/Authenticate.js"
+import generateToken from "../utils/generateToken.js"
 import bcrypt from "bcrypt"
 
 dotenv.config()
@@ -25,11 +25,11 @@ export const signup = async (req, res, next) => {
         
         const [result] = await pool.query(`INSERT INTO USERS (username, email, password) VALUES ( ?, ?, ?)`, [username, email, hashPassword])
         const [user] =  await pool.query(`SELECT * FROM USERS WHERE id = ?`, result.insertId)
-        
-        const tokens =await genrateTokens(user[0])
-        
-        req.user = user
-        res.status(201).json(tokens)
+        generateToken(res, user._id);
+
+        const usercreated =  user[0]
+        req.user = usercreated
+       res.json({usercreated})
 
     } catch (error) {
         next(error)
@@ -54,9 +54,9 @@ export const login = async(req, res, next) => {
             res.status(401).json({message: "Unauthorized"})
         }
         
-        const tokens =await genrateTokens(user)
+        generateToken(res, user)
         req.user = user
-        res.json(tokens)
+        res.json(user)
     } catch(error) {
         next(error)
     }
@@ -64,19 +64,17 @@ export const login = async(req, res, next) => {
 }
 
 export const logout = async (req, res, next) => {
-    const refreshToken = req.body.refreshToken
-
-    try {
+    try{
+      res.cookie('jwt', '', {
+          httpOnly: true,
+          expires: new Date(0),
+        });
+        res.status(200).json({ message: 'Logged out successfully' });
         
-        if (!refreshToken){
-            throw Error("INVALID CREDENTIALS")
-        }        
-
-        await pool.query(`DELETE from REFRESH_TOKENS WHERE token = ?`, [refreshToken])
-        res.json({"message": "logged out successfully"})
-
-    } catch (error) {
+    }
+    catch (error) {
         next(error)
     }
+        
     
 }
