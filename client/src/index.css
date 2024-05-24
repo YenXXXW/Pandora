@@ -5,3 +5,7 @@
 .authButton {
     @apply bg-gray-800 text-white rounded-md py-2 font-bold hover:text-gray-800 hover:bg-blue-400  hover:border-black transform hover:duration-150 hover:ease-out
 }
+
+input {
+    @apply input input-bordered 
+}

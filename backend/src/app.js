@@ -5,16 +5,27 @@ import authRoutes from "./routes/auth.js"
 import morgan from 'morgan'
 import protect from './middleware/authenticate.js'
 import cookieParser from 'cookie-parser'
+import cors from "cors";
+import session from 'express-session'
 
 dotenv.config()
 
 const app = express()
+
+app.use(
+    cors({
+      origin: ["http://localhost:5173"],
+      credentials: true,
+    })
+  );
 
 app.use(express.json())
 
 app.use(cookieParser())
 
 app.use(morgan("dev"))
+
+
 
 const port = process.env.MYSQL_PORT
 
@@ -35,7 +46,7 @@ app.use((req, res, next) => {
 
 // next() needed that next recognizes the following as error handler
 app.use((error, req, res, next) => {
-    console.log("fck")
+    console.log(error)
     let errorMessage = 'An unknowned error occured'
     if (error instanceof  Error) errorMessage  = error.message
         

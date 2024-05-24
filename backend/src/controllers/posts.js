@@ -51,7 +51,9 @@ export const updatePost = async (req, res, next) => {
     const postId = req.params.postId
 
     try{
-        if(!title || !content || !user_id || !postId) throw Error("Please fill the requied paraemeters")
+        if(!title || !content || !user_id || !postId){
+            throw Error("Please fill the requied paraemeters")
+        }
 
         const [result] = await pool.query(`UPDATE POSTS SET title = ?, content = ?, user_id = ? WHERE id = ?`, [title, content, user_id, postId]);
         const id = result.insertId

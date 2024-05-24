@@ -45,13 +45,13 @@ export const login = async(req, res, next) => {
         const [emailIndb] = await  pool.query(`SELECT * from users where email =?`, [email])
         const user = emailIndb[0]
         if (!user) {
-            res.status(401).json({message: "Unauthorized"})
+            throw Error("Unauthorized")
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password)
         
         if(!passwordMatch) {
-            res.status(401).json({message: "Unauthorized"})
+            throw Error("Unauthorized")
         }
         
         generateToken(res, user)

@@ -6,16 +6,19 @@ const protect = asyncHandler(async (req, res, next) => {
   let token;
 
   token = req.cookies.jwt;
-  const email = req.body.email
+
 
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = {
+        id: decoded.userId.id,
+        email: decoded.userId.email,
+        username: decoded.userId.username
+      }
+      req.user = user
 
-      const [user] = await  pool.query(`SELECT * from users where email =?`, [email])
-        console.log("good")
-      req.user = user[0]
-      next();
+      next()
     } catch (error) {
       next(error)
     }
