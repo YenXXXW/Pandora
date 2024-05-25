@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 
-const POSTS_URL = "/api/posts/";
+const POSTS_URL = "/api/posts";
 
 export const postsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,7 +22,7 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
     updatePost: builder.mutation({
       query: ({data, id}) => ({
-        url: `${POSTS_URL}${id}`,
+        url: `${POSTS_URL}/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -40,7 +40,7 @@ export const postsApiSlice = apiSlice.injectEndpoints({
 
     deletePost: builder.mutation({
       query: (id) => ({
-        url: `${POSTS_URL}${id}`,
+        url: `${POSTS_URL}/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["POSTS"],

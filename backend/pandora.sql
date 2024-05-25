@@ -1,9 +1,13 @@
 DROP SCHEMA IF EXISTS pandoara;
 CREATE DATABASE pandora;
 
-drop table user;
+USE pandora;
 
-use pandora;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS users;
+
+
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,7 +17,7 @@ CREATE TABLE users (
 );
 
 
-CREATE TABLE POST (
+CREATE TABLE POSTS (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     title text,
 	content text,
@@ -32,9 +36,5 @@ CREATE TABLE REFRESH_TOKENS (
 
 select * from users;
 
-insert into users values (null, 'yan', 'yab@gmail.com', 'yan12'); 
 
-
-select * from posts;
-INSERT INTO posts (title, content, user_id)
-VALUES ('My First Post', 'This is my first post on the website.', 1);
+select * from posts join users on users.id = posts.user_id;

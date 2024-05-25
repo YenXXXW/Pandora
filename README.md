@@ -19,9 +19,10 @@ cd <repository-directory>
 Navigate to the backend directory:
 
 cd backend
-Install the required dependencies:
 
+Install the required dependencies:
 npm install
+
 Create a .env file in the backend directory with the following variables:
 
 env
@@ -54,7 +55,7 @@ Frontend
 Navigate to the frontend directory and start the development server:
 
 cd frontend
-npm start
+npm run dev
 
 ### Environment Variables
 Ensure that your .env file in the backend directory contains the following variables with your specific configuration:

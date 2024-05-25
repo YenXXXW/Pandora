@@ -49,10 +49,7 @@ export default function Post() {
 
         } catch (error) {
             console.log(error)
-        } finally {
-            setTitle("")
-            seContent("")
-        }
+        } 
 
     }
     if (isLoading) {
@@ -76,8 +73,8 @@ export default function Post() {
         data && (
           
          <form onSubmit={(e) => handleSubmit(e, id)} className="flex flex-col gap-3 border-gray-300 px-10 py-5 border-[1px]">
-            <input name="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
-            <input name="content" value={content} onChange={(e) => seContent(e.target.value)}/>
+            <input name="title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+            <input name="content" value={content} onChange={(e) => seContent(e.target.value)} required/>
             <button className="bg-green-400 py-1 rounded-md">Update {isLoadingUpdate ? <span className="loading loading-spinner loading-sm"></span> : <></> }</button>
          </form>
         

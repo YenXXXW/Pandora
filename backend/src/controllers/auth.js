@@ -25,15 +25,16 @@ export const signup = async (req, res, next) => {
         const hashPassword = await bcrypt.hash(password, 10)
         
         const [result] = await pool.query(`INSERT INTO USERS (username, email, password) VALUES ( ?, ?, ?)`, [username, email, hashPassword])
-        const [user] =  await pool.query(`SELECT * FROM USERS WHERE id = ?`, result.insertId)
-        generateToken(res, user);
+        const [userIndb] =  await pool.query(`SELECT * FROM USERS WHERE id = ?`, result.insertId)
+        const user =  userIndb[0]
+        generateToken(res,user);
 
-        const usercreated =  user[0]
-        console.log(usercreated)
-        req.user = usercreated
+        console.log(user)
+        req.user = user
         res.json({
-            username : usercreated.username,
-            email: usercreated.email
+            username : user.username,
+            email: user.email,
+            id: user.id
         })
 
     } catch (error) {
@@ -49,8 +50,8 @@ export const login = async(req, res, next) => {
         if(!email ||  !password){
             throw createHttpError(400, "All fields must be filled")
         } 
-        const [emailIndb] = await  pool.query(`SELECT * from users where email =?`, [email])
-        const user = emailIndb[0]
+        const [UserIndb] = await  pool.query(`SELECT * from users where email =?`, [email])
+        const user = UserIndb[0]
         if (!user) {
             throw createHttpError(401, "Unauthorized")
         }
@@ -65,7 +66,8 @@ export const login = async(req, res, next) => {
         req.user = user
         res.json({
             username : user.username,
-            email: user.email
+            email: user.email,
+            id: user.id
         })
     } catch(error) {
         next(error)
